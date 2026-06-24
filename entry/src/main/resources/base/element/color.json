@@ -1,0 +1,88 @@
+{
+  "color": [
+    {
+      "name": "start_window_background",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "bg_primary",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "bg_secondary",
+      "value": "#F5F5F7"
+    },
+    {
+      "name": "bg_tertiary",
+      "value": "#EDEDF0"
+    },
+    {
+      "name": "text_primary",
+      "value": "#1A1A2E"
+    },
+    {
+      "name": "text_secondary",
+      "value": "#6B6B80"
+    },
+    {
+      "name": "text_tertiary",
+      "value": "#9E9EB0"
+    },
+    {
+      "name": "text_inverse",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "accent",
+      "value": "#E8753A"
+    },
+    {
+      "name": "accent_light",
+      "value": "#F09060"
+    },
+    {
+      "name": "primary_dark",
+      "value": "#1A1A2E"
+    },
+    {
+      "name": "border",
+      "value": "#E5E5EA"
+    },
+    {
+      "name": "border_light",
+      "value": "#F0F0F2"
+    },
+    {
+      "name": "divider",
+      "value": "#EAEAEF"
+    },
+    {
+      "name": "bubble_self",
+      "value": "#E8753A"
+    },
+    {
+      "name": "bubble_other",
+      "value": "#F0F0F2"
+    },
+    {
+      "name": "bubble_system",
+      "value": "#F5F5F7"
+    },
+    {
+      "name": "state_success",
+      "value": "#34C759"
+    },
+    {
+      "name": "state_warning",
+      "value": "#FF9F0A"
+    },
+    {
+      "name": "state_error",
+      "value": "#FF3B30"
+    },
+    {
+      "name": "state_info",
+      "value": "#007AFF"
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "跨设备即时通信"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "跨设备即时通信应用"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "WiFi IM"
+    },
+    {
+      "name": "app_name",
+      "value": "WiFi IM"
+    },
+    {
+      "name": "tab_device",
+      "value": "设备"
+    },
+    {
+      "name": "tab_chat",
+      "value": "消息"
+    },
+    {
+      "name": "tab_settings",
+      "value": "设置"
+    },
+    {
+      "name": "my_device",
+      "value": "我的设备"
+    },
+    {
+      "name": "nearby_devices",
+      "value": "附近设备"
+    },
+    {
+      "name": "refresh",
+      "value": "刷新"
+    },
+    {
+      "name": "input_hint",
+      "value": "输入消息..."
+    },
+    {
+      "name": "send",
+      "value": "发送"
+    },
+    {
+      "name": "image_preview",
+      "value": "图片预览"
+    },
+    {
+      "name": "device_name_label",
+      "value": "设备名称"
+    },
+    {
+      "name": "connected",
+      "value": "已连接"
+    },
+    {
+      "name": "disconnected",
+      "value": "未连接"
+    },
+    {
+      "name": "connecting",
+      "value": "连接中..."
+    },
+    {
+      "name": "sending",
+      "value": "发送中..."
+    },
+    {
+      "name": "delivered",
+      "value": "已送达"
+    },
+    {
+      "name": "failed_retry",
+      "value": "发送失败，点击重试"
+    },
+    {
+      "name": "no_devices",
+      "value": "未发现附近设备"
+    },
+    {
+      "name": "no_sessions",
+      "value": "暂无会话"
+    },
+    {
+      "name": "exit_group",
+      "value": "退出群组"
+    },
+    {
+      "name": "confirm_exit",
+      "value": "确定要退出群组吗？"
+    },
+    {
+      "name": "cancel",
+      "value": "取消"
+    },
+    {
+      "name": "confirm",
+      "value": "确定"
+    },
+    {
+      "name": "save",
+      "value": "保存"
+    }
+  ]
+}

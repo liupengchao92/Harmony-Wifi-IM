@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单聊会话</title>
+    <style id="theme-vars">
+/* ========================================
+   IM System — Brand Design Tokens
+   Style: Minimalist White (极简白)
+   Device: Mobile (HarmonyOS App Mockup)
+   ======================================== */
+
+:root {
+  /* ---- Brand Colors ---- */
+  --color-primary: #1A1A2E;
+  --color-primary-light: #2D2D44;
+  --color-primary-dark: #0F0F1A;
+
+  --color-accent: #E8753A;
+  --color-accent-light: #F09060;
+  --color-accent-dark: #C45E28;
+
+  /* ---- Neutral Scale ---- */
+  --color-bg: #FFFFFF;
+  --color-bg-secondary: #F5F5F7;
+  --color-bg-tertiary: #EDEDF0;
+  --color-surface: #FFFFFF;
+  --color-surface-hover: #F9F9FB;
+
+  --color-text-primary: #1A1A2E;
+  --color-text-secondary: #6B6B80;
+  --color-text-tertiary: #9E9EB0;
+  --color-text-inverse: #FFFFFF;
+
+  --color-border: #E5E5EA;
+  --color-border-light: #F0F0F2;
+  --color-divider: #EAEAEF;
+
+  /* ---- State Colors ---- */
+  --state-success: #34C759;
+  --state-warning: #FF9F0A;
+  --state-error: #FF3B30;
+  --state-info: #007AFF;
+
+  /* ---- Chat Specific ---- */
+  --color-bubble-self: #E8753A;
+  --color-bubble-self-text: #FFFFFF;
+  --color-bubble-other: #F0F0F2;
+  --color-bubble-other-text: #1A1A2E;
+  --color-bubble-system: #F5F5F7;
+  --color-bubble-system-text: #6B6B80;
+
+  /* ---- Radius ---- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* ---- Typography ---- */
+  --font-family: "PingFang SC", "HarmonyOS Sans", -apple-system, "Helvetica Neue", "Noto Sans SC", sans-serif;
+  --font-family-mono: "SF Mono", "Menlo", "Monaco", monospace;
+
+  --font-size-xs: 10px;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-md: 15px;
+  --font-size-lg: 17px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 28px;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.65;
+
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.05em;
+
+  /* ---- Spacing ---- */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-2xl: 24px;
+  --space-3xl: 32px;
+  --space-4xl: 48px;
+
+  /* ---- Shadows ---- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-float: 0 8px 32px rgba(0, 0, 0, 0.12);
+
+  /* ---- Transitions ---- */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 350ms ease;
+
+  /* ---- Z-index ---- */
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+}
+
+/* ---- Typography Classes ---- */
+.text-xs { font-size: var(--font-size-xs); line-height: var(--line-height-tight); }
+.text-sm { font-size: var(--font-size-sm); line-height: var(--line-height-normal); }
+.text-base { font-size: var(--font-size-base); line-height: var(--line-height-normal); }
+.text-md { font-size: var(--font-size-md); line-height: var(--line-height-normal); }
+.text-lg { font-size: var(--font-size-lg); line-height: var(--line-height-tight); }
+.text-xl { font-size: var(--font-size-xl); line-height: var(--line-height-tight); }
+.text-2xl { font-size: var(--font-size-2xl); line-height: var(--line-height-tight); }
+.text-3xl { font-size: var(--font-size-3xl); line-height: var(--line-height-tight); }
+
+.font-normal { font-weight: var(--font-weight-normal); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold { font-weight: var(--font-weight-bold); }
+
+.text-primary { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-tertiary { color: var(--color-text-tertiary); }
+.text-accent { color: var(--color-accent); }
+.text-inverse { color: var(--color-text-inverse); }
+
+/* ---- Utility Classes ---- */
+.bg-page { background-color: var(--color-bg); }
+.bg-secondary { background-color: var(--color-bg-secondary); }
+.bg-surface { background-color: var(--color-surface); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-primary: var(--color-primary);
+    --color-accent: var(--color-accent);
+    --color-border: var(--color-border);
+  }
+  @layer base {
+    body { background: var(--color-surface); color: var(--color-text-primary); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main class="flex flex-col h-screen" style="max-width: 375px; margin: 0 auto; font-family: var(--font-family);">
+
+      <!-- Top Header Bar -->
+      <header class="flex items-center justify-between px-4 h-12 shrink-0" style="background: var(--color-surface); border-bottom: 1px solid var(--color-border);">
+        <button data-dom-id="back-to-sessions" class="inline-flex items-center justify-center w-8 h-8 rounded-lg" style="color: var(--color-text-primary);" aria-label="返回">
+          <i data-lucide="chevron-left" class="w-5 h-5"></i>
+        </button>
+        <div class="flex items-center gap-1.5 min-w-0">
+          <span class="font-semibold text-sm truncate" style="color: var(--color-text-primary);">张三的手机</span>
+          <span class="w-2 h-2 rounded-full shrink-0" style="background: var(--state-success);"></span>
+        </div>
+        <button class="inline-flex items-center justify-center w-8 h-8 rounded-lg" style="color: var(--color-text-primary);" aria-label="更多选项">
+          <i data-lucide="more-horizontal" class="w-5 h-5"></i>
+        </button>
+      </header>
+
+      <!-- Chat Message Area -->
+      <div class="flex-1 overflow-y-auto px-4 py-3" style="background: var(--color-bg-secondary);">
+
+        <!-- Time Separator: 今天 14:30 -->
+        <div class="flex justify-center my-3">
+          <span class="text-xs px-2 py-0.5 rounded-full" style="color: var(--color-text-tertiary); background: var(--color-bubble-system);">今天 14:30</span>
+        </div>
+
+        <!-- Received Message 1 -->
+        <div class="flex items-end gap-2 mb-3">
+          <div class="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-xs font-medium" style="background: var(--color-bg-tertiary); color: var(--color-text-secondary);">张</div>
+          <div class="relative max-w-[70%] px-3 py-2 text-sm" style="background: var(--color-bubble-other); color: var(--color-bubble-other-text); border-radius: 2px var(--radius-lg) var(--radius-lg) var(--radius-lg);">
+            <div class="absolute left-[-6px] bottom-2 w-0 h-0" style="border-top: 6px solid transparent; border-right: 6px solid var(--color-bubble-other); border-bottom: 0 solid transparent;"></div>
+            你好，我在附近发现了你的设备
+          </div>
+        </div>
+
+        <!-- Sent Message 1 -->
+        <div class="flex items-end gap-2 mb-3 justify-end">
+          <div class="relative max-w-[70%] px-3 py-2 text-sm" style="background: var(--color-bubble-self); color: var(--color-bubble-self-text); border-radius: var(--radius-lg) 2px var(--radius-lg) var(--radius-lg);">
+            <div class="absolute right-[-6px] bottom-2 w-0 h-0" style="border-top: 6px solid transparent; border-left: 6px solid var(--color-bubble-self); border-bottom: 0 solid transparent;"></div>
+            你好！我也看到了，我们连接一下吧
+          </div>
+        </div>
+
+        <!-- Received Message 2 -->
+        <div class="flex items-end gap-2 mb-3">
+          <div class="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-xs font-medium" style="background: var(--color-bg-tertiary); color: var(--color-text-secondary);">张</div>
+          <div class="relative max-w-[70%] px-3 py-2 text-sm" style="background: var(--color-bubble-other); color: var(--color-bubble-other-text); border-radius: 2px var(--radius-lg) var(--radius-lg) var(--radius-lg);">
+            <div class="absolute left-[-6px] bottom-2 w-0 h-0" style="border-top: 6px solid transparent; border-right: 6px solid var(--color-bubble-other); border-bottom: 0 solid transparent;"></div>
+            好的，我点击连接了
+          </div>
+        </div>
+
+        <!-- Sent Message 3 with Image Thumbnail -->
+        <div class="flex items-end gap-2 mb-3 justify-end">
+          <div class="relative max-w-[70%] px-2 py-2" style="background: var(--color-bubble-self); border-radius: var(--radius-lg) 2px var(--radius-lg) var(--radius-lg);">
+            <div class="absolute right-[-6px] bottom-2 w-0 h-0" style="border-top: 6px solid transparent; border-left: 6px solid var(--color-bubble-self); border-bottom: 0 solid transparent;"></div>
+            <div data-dom-id="chat-image-thumb" class="w-[120px] h-[120px] rounded-lg flex items-center justify-center" style="background: rgba(255,255,255,0.15);">
+              <i data-lucide="image" class="w-8 h-8" style="color: rgba(255,255,255,0.6);"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sent Message 4: Sending with pulse animation -->
+        <div class="flex items-end gap-2 mb-3 justify-end">
+          <div class="relative max-w-[70%] px-3 py-2 text-sm flex items-center gap-2" style="background: var(--color-bubble-self); color: var(--color-bubble-self-text); border-radius: var(--radius-lg) 2px var(--radius-lg) var(--radius-lg);">
+            <div class="absolute right-[-6px] bottom-2 w-0 h-0" style="border-top: 6px solid transparent; border-left: 6px solid var(--color-bubble-self); border-bottom: 0 solid transparent;"></div>
+            <span class="sending-pulse">发送中...</span>
+            <svg class="w-4 h-4 shrink-0 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Time Separator: 14:35 -->
+        <div class="flex justify-center my-3">
+          <span class="text-xs px-2 py-0.5 rounded-full" style="color: var(--color-text-tertiary); background: var(--color-bubble-system);">14:35</span>
+        </div>
+
+        <!-- Received Image Message -->
+        <div class="flex items-end gap-2 mb-3">
+          <div class="w-10 h-10 rounded-full shrink-0 flex items-center justify-center text-xs font-medium" style="background: var(--color-bg-tertiary); color: var(--color-text-secondary);">张</div>
+          <div class="relative max-w-[70%] px-2 py-2" style="background: var(--color-bubble-other); border-radius: 2px var(--radius-lg) var(--radius-lg) var(--radius-lg);">
+            <div class="absolute left-[-6px] bottom-2 w-0 h-0" style="border-top: 6px solid transparent; border-right: 6px solid var(--color-bubble-other); border-bottom: 0 solid transparent;"></div>
+            <div class="w-[120px] h-[120px] rounded-lg flex items-center justify-center" style="background: var(--color-bg-secondary);">
+              <i data-lucide="image" class="w-8 h-8" style="color: var(--color-text-tertiary);"></i>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Input Bar -->
+      <div class="flex items-center gap-2 px-3 py-2 shrink-0" style="background: var(--color-surface); border-top: 1px solid var(--color-border);">
+        <button class="inline-flex items-center justify-center w-8 h-8 rounded-lg shrink-0" style="color: var(--color-text-secondary);" aria-label="更多">
+          <i data-lucide="plus-circle" class="w-6 h-6"></i>
+        </button>
+        <div class="flex-1 min-w-0">
+          <input type="text" placeholder="输入消息..." class="w-full px-3 py-2 rounded-lg text-sm outline-none" style="background: var(--color-border-light); color: var(--color-text-primary); font-family: var(--font-family);">
+        </div>
+        <button class="inline-flex items-center justify-center px-3 py-1.5 rounded-lg text-sm font-medium shrink-0" style="background: var(--color-accent); color: var(--color-text-inverse);">
+          发送
+        </button>
+      </div>
+
+    </main>
+
+    <!-- Custom Styles for chat-specific effects -->
+    <style>
+      @keyframes pulse-opacity {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+      .sending-pulse {
+        animation: pulse-opacity 1.5s ease-in-out infinite;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .sending-pulse {
+          animation: none;
+        }
+      }
+    </style>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
