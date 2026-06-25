@@ -11,14 +11,45 @@ struct ChatPage {
   @State sessionId: string = '';
   @State sessionType: number = 1;
   @State peerName: string = '';
+  /** 消息列表滚动控制器 */
+  private scroller: Scroller = new Scroller();
 
   aboutToAppear(): void {
-    let params = router.getParams() as Record<string, Object>;
+    let params: Record<string, Object> = router.getParams() as Record<string, Object>;
     this.sessionId = params.sessionId as string;
     this.sessionType = params.sessionType as number;
     this.peerName = params.peerName as string;
     this.viewModel.init(this.sessionId, this.sessionType, this.peerName);
     this.viewModel.clearUnread();
+
+    // 新消息到达时自动滚动到底部
+    this.viewModel.onMessageAdded = () => {
+      this.scrollToBottom(80);
+    };
+
+    // 页面打开后等待历史消息加载完成，滚动到底部
+    setTimeout(() => {
+      this.scrollToBottom(80);
+    }, 300);
+  }
+
+  /**
+   * 滚动消息列表到底部（最新消息） — 微信行为：
+   *
+   * 使用 scrollTo + 极大的 yOffset 替代 scrollEdge，原因：
+   * - HarmonyOS 的 scrollEdge 存在内部 Lock 机制，重复调用会被忽略
+   * - scrollTo 不受 Lock 限制，每次都能可靠执行
+   *
+   * @param delay 延迟毫秒数，默认 80ms。键盘弹起场景建议 300ms。
+   */
+  private scrollToBottom(delay: number = 80): void {
+    setTimeout(() => {
+      this.scroller.scrollTo({
+        xOffset: 0,
+        yOffset: 999999,
+        animation: false
+      });
+    }, delay);
   }
 
   build() {
@@ -59,19 +90,35 @@ struct ChatPage {
       .layoutWeight(1)
       .alignItems(HorizontalAlign.Center)
 
-      Button('⋯')
-        .fontSize(20)
-        .fontColor('#1A1A2E')
-        .backgroundColor(Color.Transparent)
+      if (this.sessionType === 2) {
+        Button('⋯')
+          .fontSize(20)
+          .fontColor('#1A1A2E')
+          .backgroundColor(Color.Transparent)
+          .onClick(() => {
+            router.pushUrl({
+              url: 'pages/GroupDetailPage',
+              params: { sessionId: this.sessionId }
+            });
+          })
+      } else {
+        Row()
+          .width(32)
+          .height(32)
+      }
     }
+    .width('100%')
+    .height(52)
     .padding({ left: 8, right: 8, top: 8, bottom: 8 })
     .backgroundColor(Color.White)
     .border({ width: { bottom: 0.5 }, color: { bottom: '#E5E5EA' } })
+    .expandSafeArea([SafeAreaType.KEYBOARD])
+    .zIndex(999)
   }
 
   @Builder
   messageList() {
-    List() {
+    List({ scroller: this.scroller }) {
       ForEach(this.viewModel.messages, (message: MessageModel) => {
         ListItem() {
           if (message.type === MessageType.SYSTEM_JOIN || message.type === MessageType.SYSTEM_LEAVE) {
@@ -90,10 +137,12 @@ struct ChatPage {
             MessageBubble({ message: message, isGroup: false })
           }
         }
+        .padding({ left: 12, right: 12 })
       }, (message: MessageModel) => message.messageId)
     }
     .layoutWeight(1)
     .width('100%')
+    .edgeEffect(EdgeEffect.Spring)
   }
 
   @Builder
@@ -118,6 +167,11 @@ struct ChatPage {
         .onChange((value: string) => {
           this.inputText = value;
         })
+        .onEditChange((isEditing: boolean) => {
+          if (isEditing) {
+            this.scrollToBottom(300);
+          }
+        })
 
       Button('发送')
         .fontSize(14)
@@ -129,8 +183,11 @@ struct ChatPage {
         .onClick(() => {
           this.viewModel.sendTextMessage(this.inputText);
           this.inputText = '';
+          // 发送新消息后滚动到底部展示
+          this.scrollToBottom();
         })
     }
+    .width('100%')
     .padding({ left: 8, right: 8, top: 8, bottom: 8 })
     .backgroundColor(Color.White)
     .border({ width: { top: 0.5 }, color: { top: '#E5E5EA' } })

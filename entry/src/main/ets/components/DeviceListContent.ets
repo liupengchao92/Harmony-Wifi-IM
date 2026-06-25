@@ -1,5 +1,6 @@
 import { DeviceListViewModel } from '../viewmodel/DeviceListViewModel';
 import { DeviceItem } from '../model/DeviceItem';
+import router from '@ohos.router';
 
 const AVATAR_COLORS: string[] = ['#4A90D9', '#7B68EE', '#E8A838', '#50C878', '#D44C4C', '#4CAF50', '#FF7043', '#5C6BC0'];
 
@@ -9,6 +10,17 @@ export struct DeviceListContent {
 
   aboutToAppear(): void {
     this.viewModel.init();
+    // 绑定导航回调：连接/创建群组成功后自动跳转到聊天页
+    this.viewModel.onNavigateToChat = (sessionId: string, sessionType: number, peerName: string) => {
+      router.pushUrl({
+        url: 'pages/ChatPage',
+        params: {
+          sessionId: sessionId,
+          sessionType: sessionType,
+          peerName: peerName
+        }
+      });
+    };
   }
 
   build() {
@@ -208,6 +220,10 @@ export struct DeviceListContent {
           .padding({ left: 12, right: 12 })
           .onClick(() => {
             this.viewModel.connectToDevice(device.deviceAddress);
+            // P2P 连接成功后自动跳转聊天
+            setTimeout(() => {
+              this.viewModel.onP2pConnected();
+            }, 2000);
           })
       } else {
         Button('连接')
@@ -221,6 +237,10 @@ export struct DeviceListContent {
           .padding({ left: 12, right: 12 })
           .onClick(() => {
             this.viewModel.connectToDevice(device.deviceAddress);
+            // P2P 连接成功后自动跳转聊天
+            setTimeout(() => {
+              this.viewModel.onP2pConnected();
+            }, 2000);
           })
       }
     }
@@ -270,6 +290,10 @@ export struct DeviceListContent {
       .borderRadius(12)
       .onClick(() => {
         this.viewModel.createGroup();
+        // 创建群组后自动进入群聊
+        setTimeout(() => {
+          this.viewModel.joinGroupChat();
+        }, 1500);
       })
 
       Text(`已发现 ${this.viewModel.devices.length} 台设备，${this.getOnlineCount()} 台在线`)

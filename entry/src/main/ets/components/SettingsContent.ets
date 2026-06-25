@@ -1,5 +1,7 @@
 import { IMManager } from '../model/IMManager';
 import { wifiManager } from '@kit.ConnectivityKit';
+import { common } from '@kit.AbilityKit';
+import { Logger } from '../common/utils/Logger';
 
 @Component
 export struct SettingsContent {
@@ -11,7 +13,9 @@ export struct SettingsContent {
   @State messageHistoryOn: boolean = true;
   @State notificationOn: boolean = true;
   @State autoSaveImage: boolean = false;
+  @State showExitConfirm: boolean = false;
   private imManager: IMManager = IMManager.getInstance();
+  private logger: Logger = new Logger('SettingsContent');
 
   aboutToAppear(): void {
     this.deviceName = this.imManager.getLocalDeviceName();
@@ -30,36 +34,97 @@ export struct SettingsContent {
   }
 
   build() {
-    Column() {
-      // Header
-      Row() {
-        Text('设置')
-          .fontSize(17)
-          .fontWeight(FontWeight.Bold)
-          .fontColor('#1A1A2E')
-        Blank()
+    Stack() {
+      Column() {
+        // Header
+        Row() {
+          Text('设置')
+            .fontSize(17)
+            .fontWeight(FontWeight.Bold)
+            .fontColor('#1A1A2E')
+          Blank()
+        }
+        .width('100%')
+        .height(44)
+        .padding({ left: 16, right: 16 })
+        .backgroundColor(Color.White)
+        .border({ width: { bottom: 1 }, color: { bottom: '#E5E5EA' } })
+
+        Scroll() {
+          Column() {
+            this.deviceInfoSection()
+            this.connectionSection()
+            this.generalSection()
+            this.aboutSection()
+            this.exitButton()
+          }
+          .padding({
+            left: 16,
+            right: 16,
+            top: 24,
+            bottom: 32
+          })
+        }
+        .layoutWeight(1)
       }
       .width('100%')
-      .height(44)
-      .padding({ left: 16, right: 16 })
-      .backgroundColor(Color.White)
-      .border({ width: { bottom: 1 }, color: { bottom: '#E5E5EA' } })
+      .height('100%')
+      .backgroundColor('#F5F5F7')
 
-      Scroll() {
+      // 退出确认对话框
+      if (this.showExitConfirm) {
         Column() {
-          this.deviceInfoSection()
-          this.connectionSection()
-          this.generalSection()
-          this.aboutSection()
-          this.exitButton()
+          Column() {
+            Text('退出应用')
+              .fontSize(17)
+              .fontWeight(FontWeight.Bold)
+              .fontColor('#1A1A2E')
+              .margin({ bottom: 8 })
+            Text('确定要退出应用吗？所有连接将被断开。')
+              .fontSize(14)
+              .fontColor('#6B6B80')
+              .margin({ bottom: 20 })
+            Row() {
+              Button('取消')
+                .fontSize(14)
+                .fontColor('#6B6B80')
+                .backgroundColor('#F0F0F2')
+                .borderRadius(8)
+                .height(40)
+                .layoutWeight(1)
+                .onClick(() => {
+                  this.showExitConfirm = false;
+                })
+              Blank().width(12)
+              Button('确定退出')
+                .fontSize(14)
+                .fontWeight(FontWeight.Medium)
+                .fontColor(Color.White)
+                .backgroundColor('#FF3B30')
+                .borderRadius(8)
+                .height(40)
+                .layoutWeight(1)
+                .onClick(() => {
+                  this.showExitConfirm = false;
+                  this.disconnectAll();
+                  this.exitApp()
+                })
+            }
+            .width('100%')
+          }
+          .width('80%')
+          .padding(24)
+          .backgroundColor(Color.White)
+          .borderRadius(16)
         }
-        .padding({ left: 16, right: 16, top: 24, bottom: 32 })
+        .width('100%')
+        .height('100%')
+        .justifyContent(FlexAlign.Center)
+        .backgroundColor('rgba(0, 0, 0, 0.45)')
       }
-      .layoutWeight(1)
     }
     .width('100%')
     .height('100%')
-    .backgroundColor('#F5F5F7')
   }
 
   // =================== 设备信息 ===================
@@ -349,7 +414,7 @@ export struct SettingsContent {
       .width('100%')
       .height(44)
       .onClick(() => {
-        this.exitApp();
+        this.showExitConfirm = true;
       })
       .margin({ top: 8, bottom: 16 })
   }
@@ -365,7 +430,9 @@ export struct SettingsContent {
       .padding({ bottom: 8 })
   }
 
+  /** 断开所有 Wi-Fi Direct 连接和 TCP 连接 */
   private disconnectAll(): void {
+    this.logger.info('disconnectAll: 断开所有连接');
     try {
       wifiManager.stopDiscoverDevices();
     } catch (e) {
@@ -374,7 +441,14 @@ export struct SettingsContent {
     this.imManager.disconnect();
   }
 
+  /** 退出应用：通过 UIAbilityContext 终止当前 Ability */
   private exitApp(): void {
-    this.disconnectAll();
+    this.logger.info('exitApp: 退出应用');
+    try {
+      let ctx: common.UIAbilityContext = this.getUIContext().getHostContext() as common.UIAbilityContext;
+      ctx.terminateSelf();
+    } catch (e) {
+      this.logger.error('exitApp: 退出失败', e as Error);
+    }
   }
 }

@@ -40,4 +40,15 @@ export class DateUtil {
     }
     return DateUtil.formatTime(timestamp);
   }
+
+  /** 格式化为完整日期时间（如：2026-06-24 15:00） */
+  public static formatDateTime(timestamp: number): string {
+    let date = new Date(timestamp);
+    let year: string = date.getFullYear().toString();
+    let month: string = (date.getMonth() + 1).toString().padStart(2, '0');
+    let day: string = date.getDate().toString().padStart(2, '0');
+    let hours: string = date.getHours().toString().padStart(2, '0');
+    let minutes: string = date.getMinutes().toString().padStart(2, '0');
+    return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes;
+  }
 }

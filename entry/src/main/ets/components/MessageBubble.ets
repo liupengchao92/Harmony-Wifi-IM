@@ -15,12 +15,13 @@ export struct MessageBubble {
     }
   }
 
+  /** 系统消息气泡：居中灰色文字 */
   @Builder
   systemBubble() {
     Flex({ justifyContent: FlexAlign.Center }) {
       Text(this.message.content)
         .fontSize(12)
-        .fontColor(Color.Gray)
+        .fontColor('#9E9EB0')
         .padding({ left: 12, right: 12, top: 4, bottom: 4 })
         .backgroundColor('#F5F5F7')
         .borderRadius(12)
@@ -29,6 +30,7 @@ export struct MessageBubble {
     .margin({ top: 4, bottom: 4 })
   }
 
+  /** 自己发送的消息气泡：靠右对齐，橙色背景 */
   @Builder
   sentBubble() {
     Flex({ justifyContent: FlexAlign.End }) {
@@ -52,12 +54,17 @@ export struct MessageBubble {
             .fontColor(Color.White)
             .padding({ left: 12, right: 12, top: 8, bottom: 8 })
         }
+
+        // 发送中：旋转加载动画
         if (this.message.status === MessageStatus.SENDING) {
-          Text('发送中...')
-            .fontSize(10)
-            .fontColor(Color.White)
-            .padding({ left: 12, right: 12, bottom: 4 })
+          LoadingProgress()
+            .width(14)
+            .height(14)
+            .color(Color.White)
+            .margin({ bottom: 4 })
         }
+
+        // 发送失败：红色提示 + 点击重发
         if (this.message.status === MessageStatus.FAILED) {
           Text('发送失败')
             .fontSize(10)
@@ -71,13 +78,15 @@ export struct MessageBubble {
     }
     .width('100%')
     .margin({ top: 4, bottom: 4 })
-    .padding({ left: 48, right: 0 })
+    .padding({ left: 36, right: 0 })
   }
 
+  /** 接收的消息气泡：靠左对齐，灰色背景 */
   @Builder
   receivedBubble() {
     Flex({ justifyContent: FlexAlign.Start }) {
       Column() {
+        // 群聊中显示发送者名称
         if (this.isGroup) {
           Text(this.message.senderName)
             .fontSize(11)
@@ -85,6 +94,7 @@ export struct MessageBubble {
             .width('100%')
             .padding({ left: 12, top: 4 })
         }
+
         if (this.message.type === MessageType.IMAGE) {
           Column() {
             Text('🖼')
@@ -111,6 +121,6 @@ export struct MessageBubble {
     }
     .width('100%')
     .margin({ top: 4, bottom: 4 })
-    .padding({ left: 0, right: 48 })
+    .padding({ left: 0, right: 36 })
   }
 }
